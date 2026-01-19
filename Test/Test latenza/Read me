@@ -1,0 +1,2 @@
+Ogni volta che arriva un pacchetto, il Subscriber guarda il suo orologio locale e fa una semplice sottrazione:
+InterArrivo=TempoArrivoAdesso​−TempoArrivoPacchettoPrecedente​
