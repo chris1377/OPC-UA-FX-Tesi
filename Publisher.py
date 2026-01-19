@@ -24,7 +24,7 @@ from asyncua.pubsub.udp import UdpSettings
 URL_DEST = "opc.udp://192.168.99.2:4840" # IP del subscriber nella VLAN
 PRIORITY = 6
 
-WRITER_ID = 100
+WRITER_ID = 100 # Deve combaciare con CFG.DataSetWriterId
 DS_NAME = str(WRITER_ID) 
 
 async def main():
@@ -90,12 +90,12 @@ async def main():
 
     # Configurazione del Gruppo (Frequenza di pubblicazione)
     my_writer_group = pubsub.WriterGroup.new_uadp(
-        name="WG_Main", writer_group_id=ua.UInt32(1), publishing_interval=1, writer=[my_writer]
+        name="WG_Main", writer_group_id=ua.UInt32(1), publishing_interval=1, writer=[my_writer] # Id writer group ua.UInt32(1)
     )
 
     # Connessione UDP
     con = pubsub.PubSubConnection.udp_uadp(
-        "TSN_Connection", ua.UInt16(1), UdpSettings(Url=URL_DEST), writer_groups=[my_writer_group]
+        "TSN_Connection", ua.UInt16(1) , UdpSettings(Url=URL_DEST), writer_groups=[my_writer_group] # ua.UInt16(1) id del dispositivo
     )
 
     # Attivazione PubSub
