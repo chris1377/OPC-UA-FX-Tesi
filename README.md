@@ -1,5 +1,5 @@
 
-# OPC UA PubSub Simulation with InfluxDB Logging
+# OPC UA PubSub Simulation with InfluxDB
 
   
 
