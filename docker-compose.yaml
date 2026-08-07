@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  influxdb:
+    image: influxdb:2.7.12
+    container_name: influxdb
+    restart: always
+    # Rete Host: usa direttamente la scheda di rete dell'Orin
+    network_mode: "host"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=*USER*
+      - DOCKER_INFLUXDB_INIT_PASSWORD=*PASSWORD*
+      - DOCKER_INFLUXDB_INIT_ORG=*ORG*
+      - DOCKER_INFLUXDB_INIT_BUCKET=tesi_tsn
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token-auth-token
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: grafana
+    restart: always
+    network_mode: "host"
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=100ms
+      - GF_DASHBOARDS_TIME_PICKER_REFRESH_INTERVALS=100ms,200ms,500ms,1s,5s,10s
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+  telegraf:
+    image: telegraf:1.29
+    container_name: telegraf
+    restart: always
+    network_mode: "host"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  grafana_data:
+  influxdb_data:
+  influxdb_config:
